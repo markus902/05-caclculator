@@ -4,13 +4,12 @@ let round = -1;
 let chain = [];
 let display;
 let currentNumber = '';
-let operator;
+let operator = null;
 
 let calc = {
     firstOperand: null,
     secondOperand: null,
     missingOperand: true,
-    storage: null,
     result: null,
     }
 
@@ -28,20 +27,41 @@ function keyComma() {a = '.'; input()};
 
 function input(){
 
+if(operator!=null){
+        
+    switch (operator != null){
+        
+        case 1:
+        addition();
+        break;
+    
+        case 2:
+        subtraction();
+        break;
+    
+        case 3:
+        multiplication();
+        break;
+    
+        case 4:
+        division();
+        break;
+    
+    }  
+}
+
 round = round + 1;
 chain[round] = a;
 
 currentNumber = currentNumber + chain[round];
-
-console.log(currentNumber);
    
 document.getElementById('numbers').innerHTML = currentNumber;
 
 }
 
-function addition(){calc.result = calc.firstOperand + calc.secondOperand;}
-function subtraction(){calc.result = calc.firstOperand - calc.secondOperand;}
-function multiplication(){calc.result = calc.firstOperand * calc.secondOperand;}
+function addition(){calc.result = calc.firstOperand + calc.secondOperand; document.getElementById('numbers').innerHTML = calc.result;}
+function subtraction(){calc.result = calc.firstOperand - calc.secondOperand; document.getElementById('numbers').innerHTML = calc.result;}
+function multiplication(){calc.result = calc.firstOperand * calc.secondOperand; document.getElementById('numbers').innerHTML = calc.result;}
 function division(){
     if (calc.secondOperand == null) {
         calc.secondOperand = 1;
@@ -49,98 +69,118 @@ function division(){
     calc.result = calc.firstOperand / calc.secondOperand;}
 
 function keyPlus() {
-    
-    operator = 1;
 
     if (calc.missingOperand == true) {
-        calc.secondOperand = Number(currentNumber);
-        console.log(calc.secondOperand);
+        calc.firstOperand = Number(currentNumber);
         addition();
         document.getElementById('numbers').innerHTML = calc.result;
         calc.missingOperand = false;
+        operator = 1;
     }
     else {
-        //calc.firstOperand = calc.secondOperand;
-        calc.firstOperand = Number(currentNumber);
-        console.log(calc.secondOperand);
-        console.log(calc.firstOperand);
+
+        if(operator != 1){
+            operatorSwitch();
+            document.getElementById('numbers').innerHTML = calc.result;
+            calc.firstOperand = calc.result;
+            operator = 1;
+
+        }
+        else{
+        operator = 1;
+        calc.secondOperand = Number(currentNumber);
         addition();
         document.getElementById('numbers').innerHTML = calc.result;
-        calc.secondOperand = calc.result;
+        calc.firstOperand = calc.result;
         calc.storage = calc.result;
-    }
-    currentNumber = '';
+    }}
     clearVars();
     }
    
 function keyMinus(){
-    
-    operator = 2;
-   
-    
 
     if (calc.missingOperand == true) {
         calc.firstOperand = Number(currentNumber);
-        console.log(calc.secondOperand);
+        subtraction();
         document.getElementById('numbers').innerHTML = calc.firstOperand;
-        calc.missingOperand = false;  
+        calc.missingOperand = false;
+        calc.secondOperand = calc.result;
+        operator = 2;
+
     }
     else{
+        
+        if(operator != 2){
+            operatorSwitch();
+            document.getElementById('numbers').innerHTML = calc.result;
+            calc.firstOperand = calc.result;
+            operator = 2;
+
+        }
+        else{
+        operator = 2;
+        calc.firstOperand = calc.result;
         calc.secondOperand = Number(currentNumber);
-        console.log(calc.secondOperand);
         subtraction();
         document.getElementById('numbers').innerHTML = calc.result;
-        calc.storage = calc.result;
-        calc.firstOperand = calc.result;
-    }    
-    currentNumber = '';
+        calc.secondOperand = calc.result;
+    }}
     clearVars();
     }
 
 function keyTimes() {
-    
-    operator = 3;
 
     if (calc.missingOperand == true) {
-        calc.secondOperand = Number(currentNumber);
-        console.log(calc.secondOperand);
+        calc.firstOperand = Number(currentNumber);
+        calc.secondOperand = 1;
         multiplication();
-        document.getElementById('numbers').innerHTML = calc.secondOperand;
+        document.getElementById('numbers').innerHTML = calc.firstOperand;
         calc.missingOperand = false;
+        operator = 3;
     }
     else {
-        //calc.firstOperand = calc.secondOperand;
-        calc.firstOperand = Number(currentNumber);
-        console.log(calc.secondOperand);
-        console.log(calc.firstOperand);
+        if(operator != 3){
+            operatorSwitch();
+            document.getElementById('numbers').innerHTML = calc.result;
+            calc.firstOperand = calc.result;
+            operator = 3;
+
+        }
+        else{
+        operator = 3;
+        calc.secondOperand = Number(currentNumber);
         multiplication();
         document.getElementById('numbers').innerHTML = calc.result;
-        calc.secondOperand = calc.result;
+        calc.firstOperand = calc.result;
         calc.storage = calc.result;
-    }
-    currentNumber = '';
+    }}
     clearVars();
     }
 
 function keyDiv(){
     
-    operator = 4;
-
     if (calc.missingOperand == true) {
         calc.firstOperand = Number(currentNumber);
-        console.log(calc.secondOperand);
         document.getElementById('numbers').innerHTML = calc.firstOperand;
-        calc.missingOperand = false;  
+        calc.missingOperand = false;
+        operator = 4;  
     }
     else{
+        if(operator != 4){
+            operatorSwitch();
+            document.getElementById('numbers').innerHTML = calc.result;
+            calc.firstOperand = calc.result;
+            operator = 4;
+
+        }
+        else{
         calc.secondOperand = Number(currentNumber);
-        console.log(calc.secondOperand);
         division();
         document.getElementById('numbers').innerHTML = calc.result;
         calc.storage = calc.result;
         calc.firstOperand = calc.result;
-    }    
-    currentNumber = '';
+        operator = 4;
+    }}
     clearVars();
 }
 
@@ -164,12 +204,31 @@ function keyEqual(){
     break;
 
 }  
-    document.getElementById('numbers').innerHTML = calc.storage;  
+    document.getElementById('numbers').innerHTML = calc.result;  
     round = -1;
     currentNumber = '';
     a = 0;
     }
 
+
+function operatorSwitch(){
+    switch (operator){
+        case 1:
+        calc.result = calc.firstOperand + Number(currentNumber);
+        break;
+    
+        case 2:
+        calc.result = calc.firstOperand - Number(currentNumber);
+        break;
+    
+        case 3:
+        calc.result = calc.firstOperand * Number(currentNumber);
+        break;
+    
+        case 4:
+        calc.result = calc.firstOperand / Number(currentNumber);
+        break;
+}}
 
 function keyClear(){
     Result = 0;
